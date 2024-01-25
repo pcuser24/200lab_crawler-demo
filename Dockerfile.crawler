@@ -1,0 +1,11 @@
+# build stage
+FROM golang:1.21.6-alpine3.19 AS build1
+WORKDIR /app
+COPY ./crawler . 
+RUN go build -o crawler .
+
+# operational stage
+FROM alpine:3.19
+WORKDIR /app
+COPY --from=build1 /app/crawler .
+CMD ["/app/crawler"]

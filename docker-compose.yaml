@@ -9,29 +9,31 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - crawler/db_data:/var/lib/postgresql/data
+      - ./crawler/db_data:/var/lib/postgresql/data
   redis:
     image: redis:7.2.4-alpine
     networks:
       - intranet
   consumer:
     build: 
-      context: ./consumer
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.consumer
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASS=200lab
       - POSTGRES_DNS=postgresql://crawler:200lab@postgres:5432/crawler?sslmode=disable
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - intranet
   crawler:
     build:
-      context: ./crawler
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.crawler
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379

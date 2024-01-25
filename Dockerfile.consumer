@@ -1,0 +1,18 @@
+# build stage
+FROM golang:1.21.6-alpine3.19 AS build
+WORKDIR /consumer
+COPY ./consumer . 
+RUN go build -o consumer .
+WORKDIR /migrate
+COPY ./migrate .
+RUN go build -o migrate .
+
+# operational stage
+FROM alpine:3.19
+WORKDIR /app
+COPY --from=build /consumer/consumer .
+COPY --from=build /consumer/wait-for.sh .
+COPY --from=build /consumer/start.sh .
+COPY --from=build2 /migrate/migrate .
+RUN chmod +x wait-for.sh && chmod +x start.sh
+CMD ["/app/consumer"]

@@ -1,5 +1,5 @@
 # build stage
-FROM golang:1.21.6-alpine3.19
+FROM golang:1.21.6-alpine3.19 AS build
 WORKDIR /app
 COPY . .
 RUN go build -o consumer .

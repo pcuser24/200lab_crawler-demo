@@ -19,10 +19,10 @@ services:
       context: ./consumer
       dockerfile: Dockerfile
     environment:
-      - REDIS_HOST=value
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASS=200lab
-      - POSTGRES_DNS=value
+      - POSTGRES_DNS=postgresql://crawler:200lab@postgres:5432/crawler?sslmode=disable
     depends_on:
       - postgres
       - redis
@@ -33,7 +33,7 @@ services:
       context: ./crawler
       dockerfile: Dockerfile
     environment:
-      - REDIS_HOST=value
+      - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASS=200lab
     depends_on:

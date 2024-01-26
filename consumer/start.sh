@@ -3,6 +3,7 @@
 set -e
 
 echo "migrate db"
-exec "/app/migrate"
+/app/migrate
 
-echo "start
+echo "start crawler"
+exec "$@"

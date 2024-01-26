@@ -8,11 +8,11 @@ COPY ./migrate .
 RUN go build -o migrate .
 
 # operational stage
-FROM alpine:3.19
+FROM alpine:3.19 AS operation
 WORKDIR /app
 COPY --from=build /consumer/consumer .
 COPY --from=build /consumer/wait-for.sh .
 COPY --from=build /consumer/start.sh .
-COPY --from=build2 /migrate/migrate .
+COPY --from=build /migrate/migrate .
 RUN chmod +x wait-for.sh && chmod +x start.sh
 CMD ["/app/consumer"]

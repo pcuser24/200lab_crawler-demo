@@ -24,10 +24,16 @@ services:
       - REDIS_PASS=200lab
       - POSTGRES_DNS=postgresql://crawler:200lab@postgres:5432/crawler?sslmode=disable
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - postgres
+      - redis
+    entrypoint:
+      [   
+        "/app/wait-for.sh",
+        "postgres:5432",
+        "--",
+        "/app/start.sh"
+      ]   
+    command: [ "/app/consumer" ]
     networks:
       - intranet
   crawler:

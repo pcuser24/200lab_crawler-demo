@@ -2,8 +2,10 @@
 
 set -e
 
+echo "init db"
+/app/migrate init
 echo "migrate db"
-/app/migrate
+/app/migrate migrate
 
-echo "start crawler"
+echo "start consumer"
 exec "$@"

@@ -6,13 +6,16 @@ services:
       POSTGRES_USER: crawler
       POSTGRES_PASSWORD: 200lab
       POSTGRES_DB: crawler
-    expose:
+    ports:
       - "5432"
     volumes:
       - ./db_data:/var/lib/postgresql/data
+    restart: unless-stopped
   redis:
     image: redis:7.2.4-alpine
-    expose:
+    environment:
+      - "REDIS_ARGS=--requirepass 200lab"
+    ports:
       - "6379"
     networks:
       - intranet
@@ -48,14 +51,6 @@ services:
       REDIS_PASS: 200lab
     depends_on:
       - redis
-    entrypoint:
-      [   
-        "/app/wait-for.sh",
-        "redis:6379",
-        "--",
-        "/app/start.sh"
-      ]   
-    command: [ "/app/consumer" ]
     networks:
       - intranet
 networks:
